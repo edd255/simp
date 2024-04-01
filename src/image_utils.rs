@@ -372,60 +372,67 @@ pub mod image {
         ///   `filename` - path to the file (as String)
         ///   `x` - x coordinate
         ///   `y` - y coordinate
-        ///   `r` - red pixel value
-        ///   `g` - green pixel value
-        ///   `b` - blue pixel value
-        pub fn landfill(&mut self, filename: &String, mut x: usize, y: usize, r: u8, g: u8, b: u8) {
-            let original_point = self.pixels[(x, y)].clone();
-            let mut s: Vec<Pixel> = vec![];
-            while !s.is_empty() {
-                s.pop();
-                let mut lx = x;
-                loop {
-                    let new_point = &mut self.pixels[(lx - 1, y)];
-                    if Self::inside(&original_point, &new_point) {
-                        new_point.red = r;
-                        new_point.green = g;
-                        new_point.blue = b;
-                        lx = lx - 1;
-                    } else {
-                        break;
+        ///   `red` - red pixel value
+        ///   `green` - green pixel value
+        ///   `blue` - blue pixel value
+        pub fn landfill(
+            &mut self,
+            filename: &String,
+            x: usize,
+            y: usize,
+            red: u8,
+            green: u8,
+            blue: u8,
+        ) {
+            if x >= self.pixels.ncols() && y >= self.pixels.nrows() {
+                return;
+            }
+            let original_point = (
+                self.pixels[(x, y)].red,
+                self.pixels[(x, y)].green,
+                self.pixels[(x, y)].blue,
+            );
+            let mut stack: Vec<(usize, usize)> = vec![];
+            stack.push((x, y));
+            while !stack.is_empty() {
+                let Some((x1, y1)) = stack.pop() else {
+                    break;
+                };
+                let mut px = self.pixels[(x1, y1)];
+                if Self::inside(original_point, px) {
+                    self.pixels[(x1, y1)].red = red;
+                    self.pixels[(x1, y1)].green = green;
+                    self.pixels[(x1, y1)].blue = blue;
+                }
+                if x1 + 1 < self.pixels.ncols() {
+                    px = self.pixels[(x1 + 1, y)];
+                    if Self::inside(original_point, px) {
+                        stack.push((x1 + 1, y1));
                     }
                 }
-                loop {
-                    let point: &mut Pixel = &mut self.pixels[(x, y)];
-                    if Self::inside(&original_point, &point) {
-                        point.red = r;
-                        point.green = g;
-                        point.blue = b;
-                        x = x + 1;
-                    } else {
-                        break;
+                if x1 - 1 < self.pixels.ncols() {
+                    px = self.pixels[(x1 - 1, y)];
+                    if Self::inside(original_point, px) {
+                        stack.push((x1 - 1, y1));
                     }
                 }
-                self.scan(&original_point, lx, x - 1, y + 1, &mut s);
-                self.scan(&original_point, lx, x - 1, y - 1, &mut s);
+                if y1 + 1 < self.pixels.nrows() {
+                    px = self.pixels[(x1, y + 1)];
+                    if Self::inside(original_point, px) {
+                        stack.push((x1, y1 + 1));
+                    }
+                }
+                if y1 - 1 < self.pixels.nrows() {
+                    px = self.pixels[(x1, y - 1)];
+                    if Self::inside(original_point, px) {
+                        stack.push((x1, y1 - 1));
+                    }
+                }
             }
             self.write(filename);
         }
-
-        fn inside(original_point: &Pixel, new_point: &Pixel) -> bool {
-            original_point.red == new_point.red
-                && original_point.green == new_point.green
-                && original_point.blue == new_point.blue
-        }
-
-        fn scan(&self, original_point: &Pixel, lx: usize, rx: usize, y: usize, s: &mut Vec<Pixel>) {
-            let mut span_added = false;
-            for x in lx..rx {
-                let point = self.pixels[(x, y)];
-                if Self::inside(original_point, &point) {
-                    span_added = false;
-                } else if !span_added {
-                    s.push(point);
-                    span_added = true;
-                }
-            }
+        fn inside(rgb: (u8, u8, u8), new_point: Pixel) -> bool {
+            rgb.0 == new_point.red && rgb.1 == new_point.green && rgb.2 == new_point.blue
         }
     }
 }
