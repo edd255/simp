@@ -131,8 +131,8 @@ pub mod image {
                 .expect("Could not write height and width.");
             writeln!(file, "{}", self.scale).expect("Could not write scale");
             let mut buffer = String::new();
-            for x in 0..self.pixels.nrows() {
-                for y in 0..self.pixels.ncols() {
+            for y in 0..self.pixels.nrows() {
+                for x in 0..self.pixels.ncols() {
                     let pixel = &self.pixels[(y, x)];
                     let red = pixel.red;
                     let green = pixel.green;
@@ -232,6 +232,10 @@ pub mod image {
         ///
         /// # Parameters:
         ///   `filename` - path to the file (as String)
+        ///   `x1` - lower vertical border
+        ///   `x2` - upper vertical border
+        ///   `y1` - left horizontal border
+        ///   `y2` - right horizontal border
         pub fn crop(&self, filename: &String, x1: usize, x2: usize, y1: usize, y2: usize) {
             assert!(x1 <= self.pixels.ncols());
             assert!(x2 <= self.pixels.ncols());
@@ -360,6 +364,68 @@ pub mod image {
             file.write_all(buffer.as_bytes())
                 .expect("Could not write buffer to file");
             buffer.clear();
+        }
+
+        /// Landfill using a color and a point
+        ///
+        /// # Parameters:
+        ///   `filename` - path to the file (as String)
+        ///   `x` - x coordinate
+        ///   `y` - y coordinate
+        ///   `r` - red pixel value
+        ///   `g` - green pixel value
+        ///   `b` - blue pixel value
+        pub fn landfill(&mut self, filename: &String, mut x: usize, y: usize, r: u8, g: u8, b: u8) {
+            let original_point = self.pixels[(x, y)].clone();
+            let mut s: Vec<Pixel> = vec![];
+            while !s.is_empty() {
+                s.pop();
+                let mut lx = x;
+                loop {
+                    let new_point = &mut self.pixels[(lx - 1, y)];
+                    if Self::inside(&original_point, &new_point) {
+                        new_point.red = r;
+                        new_point.green = g;
+                        new_point.blue = b;
+                        lx = lx - 1;
+                    } else {
+                        break;
+                    }
+                }
+                loop {
+                    let point: &mut Pixel = &mut self.pixels[(x, y)];
+                    if Self::inside(&original_point, &point) {
+                        point.red = r;
+                        point.green = g;
+                        point.blue = b;
+                        x = x + 1;
+                    } else {
+                        break;
+                    }
+                }
+                self.scan(&original_point, lx, x - 1, y + 1, &mut s);
+                self.scan(&original_point, lx, x - 1, y - 1, &mut s);
+            }
+            self.write(filename);
+        }
+
+        fn inside(original_point: &Pixel, new_point: &Pixel) -> bool {
+            original_point.red == new_point.red
+                && original_point.green == new_point.green
+                && original_point.blue == new_point.blue
+        }
+
+        fn scan(&self, original_point: &Pixel, lx: usize, rx: usize, y: usize, s: &mut Vec<Pixel>) {
+            let mut span_added = false;
+            for x in lx..rx {
+                let point = self.pixels[(x, y)];
+                if Self::inside(original_point, &point) {
+                    span_added = false;
+                } else if !span_added {
+                    s.push(point);
+                    span_added = true;
+                }
+            }
         }
     }
 }
