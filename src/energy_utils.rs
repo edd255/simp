@@ -110,6 +110,7 @@ pub mod energy {
         }
     }
 
+    /// Finds the column at the row `border` with the smallest energy.
     pub fn calculate_min_energy_column(energy: &DMatrix<u32>, border: usize) -> usize {
         let mut column: usize = 0;
         for i in 1..border {
@@ -120,6 +121,7 @@ pub mod energy {
         column
     }
 
+    /// Finds the row at the column `border` with the smallest energy.
     pub fn calculate_min_energy_row(energy: &DMatrix<u32>, border: usize) -> usize {
         let mut row: usize = 0;
         for i in 1..border {

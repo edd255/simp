@@ -370,11 +370,8 @@ pub mod image {
         ///
         /// # Parameters:
         ///   `filename` - path to the file (as String)
-        ///   `x` - x coordinate
-        ///   `y` - y coordinate
-        ///   `red` - red pixel value
-        ///   `green` - green pixel value
-        ///   `blue` - blue pixel value
+        ///   `coords` - x and y coordinaates
+        ///   `rgb` - red, green and blue pixel values
         pub fn landfill(&mut self, filename: &String, coords: (usize, usize), rgb: (u8, u8, u8)) {
             env_logger::init();
             let (y, x) = coords;
@@ -427,8 +424,16 @@ pub mod image {
             self.write(filename);
         }
 
-        fn inside(rgb: (u8, u8, u8), new_point: Pixel) -> bool {
-            rgb.0 == new_point.red && rgb.1 == new_point.green && rgb.2 == new_point.blue
+        /// Checks whether the pixel has the required colors.
+        ///
+        /// # Parameters
+        ///  `rgb` - red, green and blue pixel values
+        ///  `pixel` - the pixel to inspect
+        ///
+        /// # Returns
+        ///  true if the pixel has the required colors
+        fn inside(rgb: (u8, u8, u8), pixel: Pixel) -> bool {
+            rgb.0 == pixel.red && rgb.1 == pixel.green && rgb.2 == pixel.blue
         }
     }
 }
