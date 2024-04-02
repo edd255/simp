@@ -7,4 +7,5 @@ At university, I have implemented the seam carving algorithm in C as a project f
 * Mirroring
 * Seam Carving (vertically and horizontically)
 * Landfilling
+
 As this project was intended to learn Rust, this project will not be updated anymore.
