@@ -174,6 +174,17 @@ pub mod image {
 
         //=== SEAM CARVING ========================================================================
 
+        /// Seam carves an image using the following procedure:
+        ///     * Calculate the appropriate energy matrix.
+        ///     * Find the pixel with the minimal energy at the width/height up to which the energy
+        ///     is calculated to.
+        ///     * Calculate the seam.
+        ///     * Carve the seam.
+        ///
+        /// # Parameters
+        ///     `iterations` - how many seams should be removed
+        ///     `output` - where the output image should be stored
+        ///     `vertical` - whether vertical or horizontal seams should be removed
         pub fn seam_carve(&mut self, iterations: usize, output: &String, vertical: bool) {
             if vertical {
                 let width = self.pixels.ncols();
@@ -204,6 +215,11 @@ pub mod image {
             }
         }
 
+        /// Carves a vertical path.
+        ///
+        /// # Parameters
+        ///     `border` - the width up to which the energy matrix is calculated to
+        ///     `seam` - the seam to carve
         fn carve_vertical_path(&mut self, border: usize, seam: &[usize]) {
             for j in 0..self.pixels.nrows() {
                 let col = *seam.get(j).unwrap();
@@ -215,6 +231,11 @@ pub mod image {
             }
         }
 
+        /// Carves a horizontal path.
+        ///
+        /// # Parameters
+        ///     `border` - the height up to which the energy matrix is calculated to
+        ///     `seam` - the seam to carve
         fn carve_horizontal_path(&mut self, border: usize, seam: &[usize]) {
             for j in 0..self.pixels.ncols() {
                 let row = *seam.get(j).unwrap();
