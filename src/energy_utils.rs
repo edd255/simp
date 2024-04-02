@@ -13,9 +13,9 @@ pub mod energy {
     /// adding the minimum of the total energy of the three pixels above the current pixels.
     ///
     /// # Parameters
-    ///     `image` - the pixel matrix
-    ///     `energy` - the allocated energy matrix
-    ///     `border` - the width up to which column in the image the energy should be calculated
+    ///  `image` - the pixel matrix
+    ///  `energy` - the allocated energy matrix
+    ///  `border` - the width up to which column in the image the energy should be calculated
     pub fn calculate_vertical_energy_matrix(
         image: &Image,
         energy: &mut DMatrix<u32>,
@@ -72,9 +72,9 @@ pub mod energy {
     /// adding the minimum of the total energy of the three pixels left to the current pixel.
     ///
     /// # Parameters
-    ///     `image` - the pixel matrix
-    ///     `energy` - the allocated energy matrix
-    ///     `border` - the height up to which row in the image the energy should be calculated
+    ///  `image` - the pixel matrix
+    ///  `energy` - the allocated energy matrix
+    ///  `border` - the height up to which row in the image the energy should be calculated
     pub fn calculate_horizontal_energy_matrix(
         image: &Image,
         energy: &mut DMatrix<u32>,
@@ -155,12 +155,12 @@ pub mod energy {
     /// top left neighbor is preferred.
     ///
     /// # Parameters
-    ///     'energy' - the allocated energy matrix
-    ///     `border` - the width up to which column in the image the energy should be calculated
-    ///     'start' - the pixel with the minimal energy
+    ///  'energy' - the allocated energy matrix
+    ///  `border` - the width up to which column in the image the energy should be calculated
+    ///  'start' - the pixel with the minimal energy
     ///
     /// # Return
-    ///     the vertical seam
+    ///  the vertical seam
     pub fn calculate_optimal_vertical_path(
         energy: &DMatrix<u32>,
         border: usize,
@@ -220,12 +220,12 @@ pub mod energy {
     /// top left neighbor is preferred.
     ///
     /// # Parameters
-    ///     'energy' - the allocated energy matrix
-    ///     `border` - the height up to which row in the image the energy should be calculated
-    ///     'start' - the pixel with the minimal energy
+    ///  `energy' - the allocated energy matrix
+    ///  `border` - the height up to which row in the image the energy should be calculated
+    ///  'start' - the pixel with the minimal energy
     ///
     /// # Return
-    ///     the horizontal seam
+    ///  the horizontal seam
     pub fn calculate_optimal_horizontal_path(
         energy: &DMatrix<u32>,
         border: usize,
