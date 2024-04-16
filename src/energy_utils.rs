@@ -155,9 +155,9 @@ pub mod energy {
     /// top left neighbor is preferred.
     ///
     /// # Parameters
-    ///  'energy' - the allocated energy matrix
+    ///  `energy` - the allocated energy matrix
     ///  `border` - the width up to which column in the image the energy should be calculated
-    ///  'start' - the pixel with the minimal energy
+    ///  `start` - the pixel with the minimal energy
     ///
     /// # Return
     ///  the vertical seam
@@ -220,7 +220,7 @@ pub mod energy {
     /// top left neighbor is preferred.
     ///
     /// # Parameters
-    ///  `energy' - the allocated energy matrix
+    ///  `energy` - the allocated energy matrix
     ///  `border` - the height up to which row in the image the energy should be calculated
     ///  'start' - the pixel with the minimal energy
     ///
